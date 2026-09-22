@@ -50,6 +50,12 @@
 .lhe-status.ok { color: var(--text-success, #4ade80); }
 .lhe-status.err { color: var(--text-error); }
 
+/* transparent: true 时容器本体与边框也透明,嵌入块完全融入笔记 */
+.lhe-wrap.lhe-wrap-transparent {
+  background: transparent;
+  border-color: transparent;
+}
+
 .lhe-error {
   border: 1px dashed var(--text-error);
   border-radius: 6px;

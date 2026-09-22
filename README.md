@@ -18,7 +18,7 @@ transparent: true
 - **尺寸控制**:`height` 支持 px / vh / % / `auto`(按内容自适应,`ResizeObserver` 跟踪动态变化)
 - **三种加载策略**:`resource`(官方资源协议,默认)/ `local`(绝对路径协议)/ `srcdoc`(内容内联),悬浮控制条可实时切换与重载
 - **主题跟随**:`theme: auto` 跟随 Obsidian 明暗主题实时切换(iframe 不重载、内部状态不丢);可固定 `light` / `dark` 或 `none`
-- **透明背景**:`transparent: true` 让嵌入块融入笔记(srcdoc 策略下同时注入文档内样式)
+- **透明背景**:`transparent: true` 让嵌入块完全融入笔记 —— iframe、外层容器与边框均透明(srcdoc 策略下同时注入文档内样式)
 - **诊断友好**:路径缺失 / 文件不存在显示明确的 ⚠️ 提示;控制条显示加载状态
 - **零侵入**:接管 `![[xx.html]]` 等旧语法的"兼容模式"默认关闭
 
@@ -45,7 +45,7 @@ html.lhe-light { color-scheme: light; --bg: #eef2f7; --fg: #0f172a; }
 body { background: var(--bg); color: var(--fg); }
 ```
 
-`resource` / `local` 策略是真实文件导航,插件无法改写文档内容 —— 这两种策略下 `theme` / `transparent` 只影响 iframe 本体(`color-scheme` 与背景色),文档内部需按上述约定自行适配。
+`resource` / `local` 策略是真实文件导航,插件无法改写文档内容 —— 这两种策略下 `theme` / `transparent` 只影响 iframe 本体(`color-scheme` 与背景色),文档内部需按上述约定自行适配。`transparent: true` 时外层容器背景与边框也会透明(v1.4.4 起)。
 
 ## 安装
 

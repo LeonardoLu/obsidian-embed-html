@@ -170,7 +170,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
       '- height — 块高度:数字(px)/ 50vh / 80% / auto(按内容自适应);缺省用插件设置「默认块高度」',
       '- pathType — 加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题与透明注入)',
       '- theme — 主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)',
-      '- transparent — 透明背景:true / false;srcdoc 策略下文档内部也透明,融入笔记',
+      '- transparent — 透明背景:true / false;iframe 与外层容器均透明,srcdoc 策略下文档内部也透明,嵌入块完全融入笔记',
       '',
       '提示:theme / transparent 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体。',
       'HTML 文件适配明暗主题:按 html.lhe-dark / html.lhe-light 类编写 CSS 样式。'
@@ -401,6 +401,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
     var wrap = document.createElement('div');
     wrap.className = 'lhe-wrap';
+    if (opts.transparent) wrap.classList.add('lhe-wrap-transparent');
     wrap.dataset.lhe = file.path;
 
     var frame = document.createElement('iframe');
