@@ -7,7 +7,7 @@ var STRATS = ['resource', 'local', 'srcdoc'];
 var STRAT_LABEL = { resource: '资源URL', local: '本地协议', srcdoc: '内联' };
 var EXTERNAL_SRC = /^(https?:|data:|blob:|app:|file:)/i;
 /* 代码块内可识别的选项键(仅英文,键名一律小写比较) */
-var SPEC_KEYS = { path: 'path', height: 'height', pathtype: 'pathType', theme: 'theme', transparent: 'transparent' };
+var SPEC_KEYS = { path: 'path', height: 'height', pathtype: 'pathType', theme: 'theme' };
 var DEFAULT_HEIGHT = '480px';
 
 function errBox(text) {
@@ -32,10 +32,6 @@ function normalizeTheme(raw, fallback) {
   return fallback;
 }
 
-function isTruthy(v) {
-  return /^(true|1|yes|on)$/i.test(String(v == null ? '' : v).trim());
-}
-
 /* Obsidian 当前主题(body 上的 theme-dark / theme-light 类) */
 function currentTheme() {
   return document.body && document.body.classList.contains('theme-dark') ? 'dark' : 'light';
@@ -58,16 +54,13 @@ function sizeFrameToContent(frame, doc) {
   }
 }
 
-/* 往 srcdoc 文本注入主题引导脚本与透明样式(仅 srcdoc 策略可注入) */
-function injectInto(html, theme, transparent) {
+/* 往 srcdoc 文本注入主题引导脚本(仅 srcdoc 策略可注入) */
+function injectInto(html, theme) {
   var extra = '';
   if (theme === 'light' || theme === 'dark') {
     extra += '<script>(function(){var d=document.documentElement;function ap(t){d.classList.remove("lhe-dark","lhe-light");'
       + 'd.classList.add(t==="dark"?"lhe-dark":"lhe-light")}'
       + 'window.addEventListener("message",function(e){var a=e&&e.data;if(a&&a.__lhe)ap(a.theme)});ap("' + theme + '")})()</script>';
-  }
-  if (transparent) {
-    extra += '<style>html,body{background:transparent!important}</style>';
   }
   if (!extra) return html;
   if (/<head[^>]*>/i.test(html)) return html.replace(/<head[^>]*>/i, function (m) { return m + extra; });
@@ -132,23 +125,22 @@ class LheSettingTab extends obsidian.PluginSettingTab {
     help.createEl('p', { text: '在笔记中用 embed-html 代码块渲染库内 HTML 文件:' });
     var pre = help.createEl('pre', { cls: 'lhe-help-code' });
     pre.createEl('code', {
-      text: '```embed-html\npath: 测试页面.html\nheight: 380\npathType: srcdoc\ntheme: auto\ntransparent: true\n```'
+      text: '```embed-html\npath: 测试页面.html\nheight: 380\npathType: srcdoc\ntheme: auto\n```'
     });
     help.createEl('p', { text: '参数(仅英文键名,// 开头的行视为注释):' });
     var ul = help.createEl('ul');
     [
       ['path', '库内 HTML 文件路径;可省略参数名,直接写在块的第一行'],
       ['height', '块高度:数字(px)/ 50vh / 80% / auto(按内容自适应);缺省用下方「默认块高度」'],
-      ['pathType', '加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题与透明注入)'],
-      ['theme', '主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)'],
-      ['transparent', '透明背景:true / false;iframe 与外层容器均透明,srcdoc 策略下文档内部也透明,嵌入块完全融入笔记']
+      ['pathType', '加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题注入)'],
+      ['theme', '主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)']
     ].forEach(function (it) {
       var li = ul.createEl('li');
       li.createEl('strong', { text: it[0] + ' — ' });
       li.createEl('span', { text: it[1] });
     });
     help.createEl('p', {
-      text: '提示:theme / transparent 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体。被嵌入的 HTML 想适配明暗主题,按 html.lhe-dark / html.lhe-light 类编写样式即可(详见仓库 README)。'
+      text: '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定。被嵌入的 HTML 想适配明暗主题,按 html.lhe-dark / html.lhe-light 类编写样式即可(详见仓库 README)。'
     });
 
     /* 复制整段说明为 Markdown 纯文本(方便贴进 prompt / 文档) */
@@ -162,17 +154,15 @@ class LheSettingTab extends obsidian.PluginSettingTab {
       'height: 380',
       'pathType: srcdoc',
       'theme: auto',
-      'transparent: true',
       '```',
       '',
       '参数(仅英文键名,// 开头的行视为注释):',
       '- path — 库内 HTML 文件路径;可省略参数名,直接写在块的第一行',
       '- height — 块高度:数字(px)/ 50vh / 80% / auto(按内容自适应);缺省用插件设置「默认块高度」',
-      '- pathType — 加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题与透明注入)',
+      '- pathType — 加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题注入)',
       '- theme — 主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)',
-      '- transparent — 透明背景:true / false;iframe 与外层容器均透明,srcdoc 策略下文档内部也透明,嵌入块完全融入笔记',
       '',
-      '提示:theme / transparent 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体。',
+      '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定。',
       'HTML 文件适配明暗主题:按 html.lhe-dark / html.lhe-light 类编写 CSS 样式。'
     ].join('\n');
 
@@ -340,7 +330,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
   /* 解析代码块内容:path = 文件路径(亦可省略参数名直接写首行),其余 key: value;支持 // 注释 */
   parseSpec(source) {
-    var spec = { path: '', height: '', pathType: '', theme: '', transparent: '' };
+    var spec = { path: '', height: '', pathType: '', theme: '' };
     String(source).split('\n').map(function (s) { return s.trim(); }).forEach(function (line) {
       if (!line || line.indexOf('//') === 0) return;
       var m = line.match(/^(\w+)\s*[:=]\s*(.+)$/);
@@ -368,8 +358,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
     el.appendChild(this.buildFrame(file, {
       height: normalizeHeight(spec.height, null) || normalizeHeight(this.settings.defaultHeight, DEFAULT_HEIGHT),
       strategy: spec.pathType || this.settings.strategy,
-      theme: spec.theme,
-      transparent: isTruthy(spec.transparent)
+      theme: spec.theme
     }));
   }
 
@@ -401,12 +390,11 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
     var wrap = document.createElement('div');
     wrap.className = 'lhe-wrap';
-    if (opts.transparent) wrap.classList.add('lhe-wrap-transparent');
     wrap.dataset.lhe = file.path;
 
     var frame = document.createElement('iframe');
     frame.className = 'lhe-frame';
-    frame._spec = { theme: opts.theme || '', transparent: !!opts.transparent };
+    frame._spec = { theme: opts.theme || '' };
     if (opts.height === 'auto') {
       frame.dataset.auto = '1';
       frame.style.height = '200px'; // 占位,加载后按内容自适应
@@ -457,7 +445,6 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
     frame.dataset.strat = strat;
     frame._status = statusEl || null;
-    frame.style.background = spec.transparent ? 'transparent' : '';
     try { frame.style.colorScheme = theme || ''; } catch (e) { /* 忽略 */ }
 
     if (!frame._wired) {
@@ -492,7 +479,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
       this.app.vault.cachedRead(file).then(function (text) {
         frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals');
         frame.removeAttribute('src');
-        frame.srcdoc = injectInto(text, theme, !!spec.transparent);
+        frame.srcdoc = injectInto(text, theme);
       });
     } else {
       frame.removeAttribute('srcdoc');

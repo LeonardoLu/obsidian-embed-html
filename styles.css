@@ -1,9 +1,8 @@
+/* 容器与 iframe 始终完全透明,页面背景由 HTML 自身决定 */
 .lhe-wrap {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid var(--background-modifier-border);
-  background: var(--background-primary);
 }
 
 .lhe-frame {
@@ -11,7 +10,7 @@
   height: 480px;
   border: 0;
   display: block;
-  background: #fff;
+  background: transparent;
 }
 
 .lhe-bar {
@@ -49,12 +48,6 @@
 
 .lhe-status.ok { color: var(--text-success, #4ade80); }
 .lhe-status.err { color: var(--text-error); }
-
-/* transparent: true 时容器本体与边框也透明,嵌入块完全融入笔记 */
-.lhe-wrap.lhe-wrap-transparent {
-  background: transparent;
-  border-color: transparent;
-}
 
 .lhe-error {
   border: 1px dashed var(--text-error);
