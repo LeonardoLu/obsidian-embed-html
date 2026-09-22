@@ -446,7 +446,9 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
     frame.dataset.strat = strat;
     frame._status = statusEl || null;
-    try { frame.style.colorScheme = theme || ''; } catch (e) { /* 忽略 */ }
+    // 注意:不要给 iframe 元素设置 color-scheme —— Chromium 会据此给子文档画布刷
+    // 一层不透明的 scheme 基色(白/深灰),把页面自己的 background:transparent 盖掉。
+    // 主题适配只走 lhe-dark / lhe-light 类注入。
 
     if (!frame._wired) {
       frame._wired = true;
