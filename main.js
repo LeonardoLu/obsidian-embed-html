@@ -124,6 +124,31 @@ class LheSettingTab extends obsidian.PluginSettingTab {
     var container = this.containerEl;
     container.empty();
 
+    /* —— 语法说明 —— */
+    var help = container.createEl('div', { cls: 'lhe-help' });
+    help.createEl('h2', { text: '语法说明:embed-html 代码块' });
+    help.createEl('p', { text: '在笔记中用 embed-html 代码块渲染库内 HTML 文件:' });
+    var pre = help.createEl('pre', { cls: 'lhe-help-code' });
+    pre.createEl('code', {
+      text: '```embed-html\npath: 测试页面.html\nheight: 380\npathType: srcdoc\ntheme: auto\ntransparent: true\n```'
+    });
+    help.createEl('p', { text: '参数(仅英文键名,// 开头的行视为注释):' });
+    var ul = help.createEl('ul');
+    [
+      ['path', '库内 HTML 文件路径;可省略参数名,直接写在块的第一行'],
+      ['height', '块高度:数字(px)/ 50vh / 80% / auto(按内容自适应);缺省用下方「默认块高度」'],
+      ['pathType', '加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题与透明注入)'],
+      ['theme', '主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)'],
+      ['transparent', '透明背景:true / false;srcdoc 策略下文档内部也透明,嵌入块融入笔记']
+    ].forEach(function (it) {
+      var li = ul.createEl('li');
+      li.createEl('strong', { text: it[0] + ' — ' });
+      li.createEl('span', { text: it[1] });
+    });
+    help.createEl('p', {
+      text: '提示:theme / transparent 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体。被嵌入的 HTML 想适配明暗主题,按 html.lhe-dark / html.lhe-light 类编写样式即可(详见仓库 README)。'
+    });
+
     new obsidian.Setting(container)
       .setName('默认加载策略')
       .setDesc('resource = Obsidian 资源协议(app://库ID/…);local = 本地绝对路径协议(app://local/…);srcdoc = 把文件内容内联进 iframe(不依赖协议)。代码块里可用 pathType 覆盖')

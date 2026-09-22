@@ -59,5 +59,43 @@
   background: var(--background-secondary);
 }
 
+/* 设置页语法说明 */
+.lhe-help {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+.lhe-help h2 {
+  margin: 0 0 6px;
+  padding: 0;
+  border: none;
+  font-size: 14px;
+}
+.lhe-help p {
+  margin: 6px 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.lhe-help pre {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--background-primary);
+  font-size: 12px;
+}
+.lhe-help ul {
+  margin: 6px 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+}
+.lhe-help li {
+  margin: 3px 0;
+}
+.lhe-help strong {
+  color: var(--text-normal);
+}
+
 .lhe-view { padding: 0 !important; }
 .lhe-view .lhe-frame { height: 100%; }
