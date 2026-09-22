@@ -1,0 +1,8 @@
+# 用户本地设置,不入库
+data.json
+
+node_modules/
+*.map
+.DS_Store
+
+# 注意:main.js 刻意提交 —— 本插件为纯 JS 无构建,clone 即用
