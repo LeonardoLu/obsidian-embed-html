@@ -394,6 +394,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
 
     var frame = document.createElement('iframe');
     frame.className = 'lhe-frame';
+    frame.style.background = 'transparent'; // 内联兜底:优先级最高,不依赖样式表加载
     frame._spec = { theme: opts.theme || '' };
     if (opts.height === 'auto') {
       frame.dataset.auto = '1';

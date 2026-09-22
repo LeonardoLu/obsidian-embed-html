@@ -1,7 +1,7 @@
 {
   "id": "obsidian-embed-html",
   "name": "Embed HTML",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "minAppVersion": "1.0.0",
   "description": "用独立的 ```embed-html 代码块在笔记中渲染库内 HTML:高度/内容自适应、三种加载策略、明暗主题跟随与透明背景,不改动任何既有语法。",
   "author": "LeonardoLu",
