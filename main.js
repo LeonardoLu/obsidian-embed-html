@@ -141,7 +141,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
       ['height', '块高度:数字(px)/ 50vh / 80% / auto(按内容自适应);缺省用下方「默认块高度」'],
       ['pathType', '加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题与透明注入)'],
       ['theme', '主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)'],
-      ['transparent', '透明背景:true / false;srcdoc 策略下文档内部也透明,嵌入块融入笔记']
+      ['transparent', '透明背景:true / false;iframe 与外层容器均透明,srcdoc 策略下文档内部也透明,嵌入块完全融入笔记']
     ].forEach(function (it) {
       var li = ul.createEl('li');
       li.createEl('strong', { text: it[0] + ' — ' });
