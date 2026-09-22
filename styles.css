@@ -73,6 +73,23 @@
   border: none;
   font-size: 14px;
 }
+.lhe-help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.lhe-help-head h2 {
+  margin: 0;
+}
+.lhe-help-copy {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 2px 12px;
+  height: auto;
+  min-height: 0;
+}
 .lhe-help p {
   margin: 6px 0;
   font-size: 12.5px;
