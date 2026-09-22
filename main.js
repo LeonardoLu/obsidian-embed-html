@@ -140,7 +140,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
       li.createEl('span', { text: it[1] });
     });
     help.createEl('p', {
-      text: '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定(Chromium 中 iframe 内文档默认铺白底,想透明的页面需显式写 html,body{background:transparent})。被嵌入的 HTML 想适配明暗主题,按 html.lhe-dark / html.lhe-light 类编写样式即可(详见仓库 README)。'
+      text: '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定(Chromium 中 iframe 内文档默认铺白底,想透明的页面需显式写 html,body{background:transparent},且不要声明 color-scheme,否则 Chromium 会给画布刷不透明基色)。被嵌入的 HTML 想适配明暗主题,按 html.lhe-dark / html.lhe-light 类编写样式即可(详见仓库 README)。'
     });
 
     /* 复制整段说明为 Markdown 纯文本(方便贴进 prompt / 文档) */
@@ -162,7 +162,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
       '- pathType — 加载策略:resource(官方资源协议,默认)/ local(绝对路径协议)/ srcdoc(内容内联,支持主题注入)',
       '- theme — 主题:auto(跟随 Obsidian 明暗,实时切换)/ light / dark / none(不注入)',
       '',
-      '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定(Chromium 中 iframe 内文档默认铺白底,想透明的页面需显式写 html,body{background:transparent})。',
+      '提示:theme 需要 srcdoc 策略才能注入文档内部,resource / local 策略下只影响 iframe 本体;容器与 iframe 始终完全透明,页面背景由 HTML 自身决定(Chromium 中 iframe 内文档默认铺白底,想透明的页面需显式写 html,body{background:transparent},且不要声明 color-scheme,否则 Chromium 会给画布刷不透明基色)。',
       'HTML 文件适配明暗主题:按 html.lhe-dark / html.lhe-light 类编写 CSS 样式。'
     ].join('\n');
 

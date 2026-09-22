@@ -43,6 +43,8 @@ html.lhe-light { color-scheme: light; --bg: #eef2f7; --fg: #0f172a; }
 body { background: var(--bg); color: var(--fg); }
 ```
 
+> ⚠️ **想透明的页面**(不写 `body` 背景)除显式 `html, body { background: transparent; }` 外,**不要声明 `color-scheme`** —— Chromium 会给画布刷不透明的方案基色(白/深灰),把透明顶掉。`color-scheme` 只建议用于不透明页面。
+
 容器与 iframe 始终完全透明(v1.5.0 起,原 `transparent` 参数已移除),页面背景由 HTML 自身决定。
 
 > ⚠️ **Chromium 限制**:iframe 内文档默认铺**白底** —— 页面想透明必须显式写 `html, body { background: transparent; }`,仅"不写背景"不等于透明。
