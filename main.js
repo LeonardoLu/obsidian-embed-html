@@ -2,7 +2,7 @@
 
 var obsidian = require('obsidian');
 
-var VIEW_TYPE = 'local-html-view';
+var VIEW_TYPE = 'embed-html-view';
 var STRATS = ['resource', 'local', 'srcdoc'];
 var STRAT_LABEL = { resource: '资源URL', local: '本地协议', srcdoc: '内联' };
 var EXTERNAL_SRC = /^(https?:|data:|blob:|app:|file:)/i;
@@ -156,7 +156,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
 
     new obsidian.Setting(container)
       .setName('默认块高度')
-      .setDesc('local-html 块未写 height 时使用:纯数字按 px,支持 50vh / 80%,或 auto(按内容自适应,需同源可访问,建议搭配 srcdoc 策略)')
+      .setDesc('embed-html 块未写 height 时使用:纯数字按 px,支持 50vh / 80%,或 auto(按内容自适应,需同源可访问,建议搭配 srcdoc 策略)')
       .addText(function (text) {
         text.setPlaceholder('480')
           .setValue(this.plugin.settings.defaultHeight)
@@ -168,7 +168,7 @@ class LheSettingTab extends obsidian.PluginSettingTab {
 
     new obsidian.Setting(container)
       .setName('兼容模式:重写旧语法(默认关闭)')
-      .setDesc('开启后插件会接管 ![[xx.html]] 原生嵌入与笔记内指向库内文件的 <iframe src>;关闭则两者保持 Obsidian 原生行为,渲染请使用 local-html 代码块')
+      .setDesc('开启后插件会接管 ![[xx.html]] 原生嵌入与笔记内指向库内文件的 <iframe src>;关闭则两者保持 Obsidian 原生行为,渲染请使用 embed-html 代码块')
       .addToggle(function (toggle) {
         toggle.setValue(this.plugin.settings.legacyRewrite)
           .onChange(function (value) {
@@ -204,8 +204,8 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
     this.registerView(VIEW_TYPE, function (leaf) { return new HtmlView(leaf, this); }.bind(this));
     this.addSettingTab(new LheSettingTab(this.app, this));
 
-    /* 独立语法:```local-html 代码块 */
-    this.registerMarkdownCodeBlockProcessor('local-html', function (source, el, ctx) {
+    /* 独立语法:```embed-html 代码块 */
+    this.registerMarkdownCodeBlockProcessor('embed-html', function (source, el, ctx) {
       this.renderCodeBlock(source, el, ctx);
     }.bind(this));
 
@@ -271,7 +271,7 @@ module.exports = class LocalHtmlEmbedPlugin extends obsidian.Plugin {
   renderCodeBlock(source, el, ctx) {
     var spec = this.parseSpec(source);
     if (!spec.path) {
-      el.appendChild(errBox('local-html 块中未指定文件路径(path)'));
+      el.appendChild(errBox('embed-html 块中未指定文件路径(path)'));
       return;
     }
     var file = this.app.metadataCache.getFirstLinkpathDest(spec.path, ctx.sourcePath);

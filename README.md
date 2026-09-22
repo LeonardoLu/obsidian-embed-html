@@ -3,7 +3,7 @@
 在 Obsidian 笔记中直接渲染本地 HTML 文件。纯 JavaScript 实现,**无构建、无依赖,clone 即用**。
 
 ```markdown
-```local-html
+```embed-html
 path: 测试页面.html
 height: 380
 pathType: srcdoc
@@ -14,7 +14,7 @@ transparent: true
 
 ## 特性
 
-- **独立语法**:```` ```local-html ```` 代码块,不改动任何既有语法(`![[..]]` 与 `<iframe>` 保持 Obsidian 原生行为)
+- **独立语法**:```` ```embed-html ```` 代码块,不改动任何既有语法(`![[..]]` 与 `<iframe>` 保持 Obsidian 原生行为)
 - **尺寸控制**:`height` 支持 px / vh / % / `auto`(按内容自适应,`ResizeObserver` 跟踪动态变化)
 - **三种加载策略**:`resource`(官方资源协议,默认)/ `local`(绝对路径协议)/ `srcdoc`(内容内联),悬浮控制条可实时切换与重载
 - **主题跟随**:`theme: auto` 跟随 Obsidian 明暗主题实时切换(iframe 不重载、内部状态不丢);可固定 `light` / `dark` 或 `none`
